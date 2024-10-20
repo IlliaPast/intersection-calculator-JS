@@ -1,0 +1,68 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Simulate Car";
+}
+
+<h1>Simulate Car</h1>
+
+<input type="file" id="fileInput" />
+<button id="readFileButton">Зчитати файл</button>
+
+<div class="car-controls">
+    <div class="car">
+        <h2>Car 1</h2>
+        <label for="xTranslateCar1">X Translate:</label>
+        <input type="number" id="xTranslateCar1" value="0" />
+        <label for="yTranslateCar1">Y Translate:</label>
+        <input type="number" id="yTranslateCar1" value="0" />
+        <label for="rotationAngleCar1">Rotation angle:</label>
+        <input type="number" id="rotationAngleCar1" value="0" />
+        <button id="applyCar1">Apply Car 1</button>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <button type="button" id="showIntersectionsCar1">Show Intersections Car 1</button>
+        </form>
+    </div>
+
+    <div class="car">
+        <h2>Car 2</h2>
+        <label for="xTranslateCar2">X Translate:</label>
+        <input type="number" id="xTranslateCar2" value="0" />
+        <label for="yTranslateCar2">Y Translate:</label>
+        <input type="number" id="yTranslateCar2" value="0" />
+        <label for="rotationAngleCar2">Rotation angle:</label>
+        <input type="number" id="rotationAngleCar2" value="0" />
+        <button id="applyCar2">Apply Car 2</button>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <button type="button" id="showIntersectionsCar2">Show Intersections Car 2</button>
+        </form>
+    </div>
+
+    <div class="line-draw">
+        <h2>Draw Line</h2>
+        <label for="startX">Start X:</label>
+        <input type="number" id="startX" value="0" />
+        <label for="startY">Start Y:</label>
+        <input type="number" id="startY" value="0" />
+        <label for="endX">End X:</label>
+        <input type="number" id="endX" value="100" />
+        <label for="endY">End Y:</label>
+        <input type="number" id="endY" value="100" />
+        <button id="drawLine">Draw Line</button>
+    </div>
+</div>
+
+<div class="clear-container">
+    <button id="clearCanvas" class="clear">Clear Canvas</button>
+</div>
+
+<canvas id="myCanvas" width="2000" height="400"></canvas>
+
+<!-- Додано елемент для відображення результатів перетинів -->
+<div id="intersectionResult" style="margin-top: 20px; font-weight: bold;"></div>
+
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<script src="~/wwwroot/js/site.js" asp-append-version="true"></script>

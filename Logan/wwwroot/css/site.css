@@ -1,0 +1,122 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #f9f9f9; /* Світліший фон для тіла */
+    font-family: Arial, sans-serif; /* Шрифт для тіла */
+}
+
+h1 {
+    text-align: center; /* Центруємо заголовок */
+    margin-bottom: 20px; /* Відступ знизу заголовка */
+}
+
+
+.input-container {
+    margin-bottom: 20px; /* Відступ між контейнерами вводу */
+}
+
+label {
+    display: block; /* Відображення міток в блочному форматі */
+    margin-bottom: 5px; /* Відступ знизу мітки */
+}
+
+.form-control {
+    padding: 10px; /* Внутрішні відступи для полів вводу */
+    border: 1px solid #ccc; /* Лінія навколо полів вводу */
+    border-radius: 4px; /* Заокруглення кутів */
+    width: calc(100% - 22px); /* Відповідна ширина з урахуванням відступів */
+    margin-bottom: 10px; /* Відступ знизу поля вводу */
+}
+
+.btn {
+    background-color: #258cfb; /* Колір кнопки */
+    color: white; /* Колір тексту кнопки */
+    border: none; /* Без лінії */
+    border-radius: 4px; /* Заокруглення кутів кнопки */
+    padding: 10px 15px; /* Внутрішні відступи для кнопки */
+    cursor: pointer; /* Курсор при наведенні */
+}
+
+    .btn:hover {
+        background-color: #007bff; /* Темніший відтінок при наведенні */
+    }
+
+    .btn:disabled {
+        background-color: #ccc; /* Колір кнопки для вимкненої */
+        cursor: not-allowed; /* Курсор для вимкненої кнопки */
+    }
+
+.car-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+}
+
+.car {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+}
+
+    .car h2 {
+        margin-bottom: 10px;
+    }
+
+    .car input, .car button {
+        margin: 5px 0;
+        width: 100%;
+    }
+
+.car-controls {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.car, .line-draw {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+label {
+    margin-top: 5px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+
+.clear {
+    display: block; /* Робимо кнопку блочним елементом */
+    margin: 10px auto; /* Центруємо через автоматичні відступи */
+    text-align: center; /* Текст всередині кнопки по центру */
+}
