@@ -98,6 +98,15 @@ function drawCars() {
     });
 }
 
+document.getElementById('clearCanvas').addEventListener('click', function () {
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawnLines = []; // Очищуємо масив ліній
+    drawCars(); // Перемальовуємо машини після очищення
+});
+
 // Оновлення координат та повороту першої машини
 document.getElementById('applyCar1').addEventListener('click', function () {
     xTranslateCar1 = parseFloat(document.getElementById('xTranslateCar1').value);
@@ -169,7 +178,7 @@ function getLinePoints(x1, y1, x2, y2) {
 // Функція для перевірки, чи перетинаються дві машини або лінія з машиною
 function findMatchingPairsWithAllComparisons(array1, array2) {
     let count = 0;
-    const tolerance = 0.1;
+    const tolerance = 0.5;
 
     array1.forEach((pair1) => {
         array2.forEach((pair2) => {
@@ -185,13 +194,27 @@ function findMatchingPairsWithAllComparisons(array1, array2) {
     return count;
 }
 
+// Функція для відображення результатів на сторінці
+function displayIntersections(carNumber, lineIntersections, carIntersections, timeTaken) {
+    let outputElement = document.getElementById('intersectionOutput');
+    if (!outputElement) {
+        outputElement = document.createElement('div');
+        outputElement.id = 'intersectionOutput';
+        document.body.appendChild(outputElement);
+    }
+    const result = `Знайдено ${lineIntersections} перетинів з лініями і ${carIntersections} перетинів з іншою машиною для машини ${carNumber} за ${timeTaken.toFixed(2)} мс.`;
+    const paragraph = document.createElement('p');
+    paragraph.textContent = result;
+    outputElement.appendChild(paragraph);
+}
+
 // Показати перетини для машини 1
 document.getElementById('showIntersectionsCar1').addEventListener('click', function () {
     const startTime = performance.now();
     const lineIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar1, drawnLines.flatMap(line => line.points));
     const carIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar1, modifiedCarCoordinatesCar2);
     const endTime = performance.now();
-    console.log(`Знайдено ${lineIntersections} перетинів з лініями і ${carIntersections} перетинів з машиною 2 для машини 1 за ${endTime - startTime} мс.`);
+    displayIntersections(1, lineIntersections, carIntersections, endTime - startTime);
 });
 
 // Показати перетини для машини 2
@@ -200,15 +223,5 @@ document.getElementById('showIntersectionsCar2').addEventListener('click', funct
     const lineIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar2, drawnLines.flatMap(line => line.points));
     const carIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar2, modifiedCarCoordinatesCar1);
     const endTime = performance.now();
-    console.log(`Знайдено ${lineIntersections} перетинів з лініями і ${carIntersections} перетинів з машиною 1 для машини 2 за ${endTime - startTime} мс.`);
-});
-
-// Очищення полотна
-document.getElementById('clearCanvas').addEventListener('click', function () {
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawnLines = []; // Очищуємо масив ліній
-    drawCars(); // Перемальовуємо машини після очищення
+    displayIntersections(2, lineIntersections, carIntersections, endTime - startTime);
 });
