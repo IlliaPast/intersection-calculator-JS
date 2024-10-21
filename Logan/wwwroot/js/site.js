@@ -71,6 +71,13 @@ function drawCars() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищуємо перед малюванням
 
+    // Зберігаємо контекст
+    ctx.save();
+
+    // Інвертуємо координати по осі Y для перевороту малювання
+    ctx.translate(0, canvas.height); // Переміщаємося внизу canvas
+    ctx.scale(1, -1); // Масштабуємо по осі Y на -1 для перевороту
+
     function drawCarWithCoordinates(color, coordinates) {
         // Малювання точок
         coordinates.forEach(({ x, y }) => {
@@ -96,7 +103,11 @@ function drawCars() {
         ctx.lineTo(line.endX, line.endY);
         ctx.stroke();
     });
+
+    // Відновлюємо контекст
+    ctx.restore();
 }
+
 
 document.getElementById('clearCanvas').addEventListener('click', function () {
     const canvas = document.getElementById('myCanvas');
