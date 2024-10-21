@@ -1,9 +1,9 @@
 ﻿let xTranslateCar1 = 0, yTranslateCar1 = 0, rotationAngleCar1 = 0;
-let xTranslateCar2 = 0, yTranslateCar2 = 0, rotationAngleCar2 = 0; // Зміщуємо другу машину вправо
-let carCoordinates = [];  // Масив для збереження координат після першого зчитування
+let xTranslateCar2 = 0, yTranslateCar2 = 0, rotationAngleCar2 = 0;
+let carCoordinates = [];
 let modifiedCarCoordinatesCar1 = [];
 let modifiedCarCoordinatesCar2 = [];
-let drawnLines = []; // Масив для збереження ліній
+let drawnLines = [];
 
 document.getElementById('readFileButton').addEventListener('click', function () {
     const fileInput = document.getElementById('fileInput');
@@ -20,7 +20,7 @@ document.getElementById('readFileButton').addEventListener('click', function () 
         const lines = content.split('\n').map(line => line.trim()).filter(line => line);
 
         if (lines.length > 0 && lines[0].toLowerCase().includes('x') && lines[0].toLowerCase().includes('y')) {
-            lines.shift(); // Видаляємо заголовок, якщо є
+            lines.shift();
         }
 
         if (lines.length === 0) {
@@ -28,35 +28,37 @@ document.getElementById('readFileButton').addEventListener('click', function () 
             return;
         }
 
-        // Зберігаємо координати після першого зчитування файлу
         carCoordinates = lines.map(line => {
             const [x, y] = line.split('\t').map(parseFloat);
             return { x, y };
         });
 
-        updateModifiedCarCoordinates(); // Оновлюємо модифіковані координати для обох машин
-        drawCars(); // Малюємо машини
+        updateModifiedCarCoordinates();
+        drawCars();
     };
 
     reader.readAsText(file);
 });
 
-// Функція для оновлення змінних модифікованих координат машин
 function updateModifiedCarCoordinates() {
     modifiedCarCoordinatesCar1 = calculateModifiedCoordinates(xTranslateCar1, yTranslateCar1, rotationAngleCar1);
     modifiedCarCoordinatesCar2 = calculateModifiedCoordinates(xTranslateCar2, yTranslateCar2, rotationAngleCar2);
 }
 
-// Функція для обчислення нових координат з урахуванням трансляції та повороту
 function calculateModifiedCoordinates(translateX, translateY, angle) {
     const modifiedCoordinates = [];
     const angleRad = angle * Math.PI / 180;
 
     carCoordinates.forEach(({ x, y }) => {
         if (!isNaN(x) && !isNaN(y)) {
+            // Переворот координат по вертикалі, відносно центра canvas
+            const canvas = document.getElementById('myCanvas');
+            const canvasCenterY = canvas.height / 2;
+            const mirroredY = canvasCenterY - (y - canvasCenterY);
+
             // Обчислення нових координат з урахуванням трансляції та повороту
-            const newX = x * Math.cos(angleRad) - y * Math.sin(angleRad) + translateX;
-            const newY = x * Math.sin(angleRad) + y * Math.cos(angleRad) + translateY;
+            const newX = x * Math.cos(angleRad) - mirroredY * Math.sin(angleRad) + translateX;
+            const newY = x * Math.sin(angleRad) + mirroredY * Math.cos(angleRad) + translateY;
             modifiedCoordinates.push({ x: newX, y: newY });
         }
     });
@@ -64,24 +66,15 @@ function calculateModifiedCoordinates(translateX, translateY, angle) {
     return modifiedCoordinates;
 }
 
-// Функція для малювання машин
 function drawCars() {
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищуємо перед малюванням
-
-    // Зберігаємо контекст
-    ctx.save();
-
-    // Інвертуємо координати по осі Y для перевороту малювання
-    ctx.translate(0, canvas.height); // Переміщаємося внизу canvas
-    ctx.scale(1, -1); // Масштабуємо по осі Y на -1 для перевороту
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     function drawCarWithCoordinates(color, coordinates) {
-        // Малювання точок
         coordinates.forEach(({ x, y }) => {
-            if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) { // Перевірка, чи координати в межах canvas
+            if (x >= 0 && x <= canvas.width && y >= 0 && y <= canvas.height) {
                 ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.arc(x, y, 1, 0, Math.PI * 2);
@@ -90,35 +83,26 @@ function drawCars() {
         });
     }
 
-    // Малюємо першу машину
     drawCarWithCoordinates('red', modifiedCarCoordinatesCar1);
-
-    // Малюємо другу машину
     drawCarWithCoordinates('blue', modifiedCarCoordinatesCar2);
 
-    // Малюємо всі збережені лінії
     drawnLines.forEach(line => {
         ctx.beginPath();
         ctx.moveTo(line.startX, line.startY);
         ctx.lineTo(line.endX, line.endY);
         ctx.stroke();
     });
-
-    // Відновлюємо контекст
-    ctx.restore();
 }
-
 
 document.getElementById('clearCanvas').addEventListener('click', function () {
     const canvas = document.getElementById('myCanvas');
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawnLines = []; // Очищуємо масив ліній
-    drawCars(); // Перемальовуємо машини після очищення
+    drawnLines = [];
+    drawCars();
 });
 
-// Оновлення координат та повороту першої машини
 document.getElementById('applyCar1').addEventListener('click', function () {
     xTranslateCar1 = parseFloat(document.getElementById('xTranslateCar1').value);
     yTranslateCar1 = parseFloat(document.getElementById('yTranslateCar1').value);
@@ -127,7 +111,6 @@ document.getElementById('applyCar1').addEventListener('click', function () {
     drawCars();
 });
 
-// Оновлення координат та повороту другої машини
 document.getElementById('applyCar2').addEventListener('click', function () {
     xTranslateCar2 = parseFloat(document.getElementById('xTranslateCar2').value);
     yTranslateCar2 = parseFloat(document.getElementById('yTranslateCar2').value);
@@ -136,7 +119,6 @@ document.getElementById('applyCar2').addEventListener('click', function () {
     drawCars();
 });
 
-// Функція для малювання лінії між точками і збереження в масив
 document.getElementById('drawLine').addEventListener('click', function () {
     const startX = parseFloat(document.getElementById('startX').value);
     const startY = parseFloat(document.getElementById('startY').value);
@@ -151,10 +133,8 @@ document.getElementById('drawLine').addEventListener('click', function () {
     ctx.lineTo(endX, endY);
     ctx.stroke();
 
-    // Використання функції getLinePoints для обчислення точок лінії
     const linePoints = getLinePoints(startX, startY, endX, endY);
 
-    // Збереження лінії в масив
     drawnLines.push({
         startX: startX,
         startY: startY,
@@ -164,7 +144,6 @@ document.getElementById('drawLine').addEventListener('click', function () {
     });
 });
 
-// Функція для отримання точок лінії
 function getLinePoints(x1, y1, x2, y2) {
     const points = [];
     const dx = x2 - x1;
@@ -186,10 +165,9 @@ function getLinePoints(x1, y1, x2, y2) {
     return points;
 }
 
-// Функція для перевірки, чи перетинаються дві машини або лінія з машиною
 function findMatchingPairsWithAllComparisons(array1, array2) {
     let count = 0;
-    const tolerance = 0.5;
+    const tolerance = 0.8;
 
     array1.forEach((pair1) => {
         array2.forEach((pair2) => {
@@ -205,7 +183,6 @@ function findMatchingPairsWithAllComparisons(array1, array2) {
     return count;
 }
 
-// Функція для відображення результатів на сторінці
 function displayIntersections(carNumber, lineIntersections, carIntersections, timeTaken) {
     let outputElement = document.getElementById('intersectionOutput');
     if (!outputElement) {
@@ -219,7 +196,6 @@ function displayIntersections(carNumber, lineIntersections, carIntersections, ti
     outputElement.appendChild(paragraph);
 }
 
-// Показати перетини для машини 1
 document.getElementById('showIntersectionsCar1').addEventListener('click', function () {
     const startTime = performance.now();
     const lineIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar1, drawnLines.flatMap(line => line.points));
@@ -228,7 +204,6 @@ document.getElementById('showIntersectionsCar1').addEventListener('click', funct
     displayIntersections(1, lineIntersections, carIntersections, endTime - startTime);
 });
 
-// Показати перетини для машини 2
 document.getElementById('showIntersectionsCar2').addEventListener('click', function () {
     const startTime = performance.now();
     const lineIntersections = findMatchingPairsWithAllComparisons(modifiedCarCoordinatesCar2, drawnLines.flatMap(line => line.points));
