@@ -120,3 +120,6 @@ button {
     margin: 10px auto; /* Центруємо через автоматичні відступи */
     text-align: center; /* Текст всередині кнопки по центру */
 }
+canvas{
+    border: 1px solid black;
+}
